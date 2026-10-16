@@ -1,0 +1,18 @@
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python & Build Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Scripts used for offline PDF generation
+generate_pdf.py
+generate_perfect_pdf.py
