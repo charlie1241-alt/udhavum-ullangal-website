@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Udhavum Ullangal Public Charitable Trust | NGO in Chennai, Tamil Nadu</title>
   
   <!-- SEO & Social Meta Tags -->
@@ -103,17 +103,50 @@
         <img src="assets/logo.svg" alt="Udhavum Ullangal Public Charitable Trust" class="brand-logo-img" width="280" height="56">
       </a>
 
-      <!-- Desktop & Mobile Navigation -->
+      <!-- Desktop & Mobile Navigation Drawer -->
       <nav class="nav-menu" id="navMenu" aria-label="Main Navigation">
-        <a href="#about" class="nav-link">Our Story</a>
-        <a href="#services-slider" class="nav-link">Services</a>
-        <a href="#roadmap" class="nav-link">Road Map</a>
-        <a href="#csr" class="nav-link">Corporate CSR</a>
-        <a href="#supporters" class="nav-link">Supporters</a>
-        <a href="#achievements" class="nav-link">Achievements</a>
-        <a href="#governance" class="nav-link">Governance</a>
-        <a href="#donate" class="nav-link">Donate</a>
-        <a href="#contact" class="nav-link">Contact</a>
+        <div class="mobile-drawer-header">
+          <div class="mobile-drawer-brand">
+            <img src="assets/emblem.png" alt="UUPCT Emblem" width="38" height="38" class="mobile-drawer-emblem">
+            <div>
+              <div class="mobile-drawer-title">Udhavum Ullangal</div>
+              <div class="mobile-drawer-sub">Public Charitable Trust</div>
+            </div>
+          </div>
+          <button class="mobile-drawer-close" id="mobileDrawerCloseBtn" aria-label="Close Navigation Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div class="mobile-drawer-links">
+          <a href="#about" class="nav-link"><span class="nav-num">01</span> Our Story</a>
+          <a href="#services-slider" class="nav-link"><span class="nav-num">02</span> Flagship Services</a>
+          <a href="#roadmap" class="nav-link"><span class="nav-num">03</span> Strategic Road Map</a>
+          <a href="#csr" class="nav-link"><span class="nav-num">04</span> Corporate CSR Hub</a>
+          <a href="#supporters" class="nav-link"><span class="nav-num">05</span> Supporters &amp; Partners</a>
+          <a href="#achievements" class="nav-link"><span class="nav-num">06</span> Ground Milestones</a>
+          <a href="#governance" class="nav-link"><span class="nav-num">07</span> Governance &amp; Trust</a>
+          <a href="#donate" class="nav-link"><span class="nav-num">08</span> 80G Tax Calculator</a>
+          <a href="#contact" class="nav-link"><span class="nav-num">09</span> Contact Us</a>
+        </div>
+
+        <div class="mobile-drawer-footer">
+          <button class="btn btn-primary btn-sm mobile-drawer-btn" onclick="openModal('donateModal'); closeMobileMenu();">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            Donate &amp; Save Tax (80G)
+          </button>
+          <button class="btn btn-outline-navy btn-sm mobile-drawer-btn" onclick="openModal('csrModal'); closeMobileMenu();">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Corporate CSR Hub
+          </button>
+          <div class="mobile-drawer-contact">
+            <a href="tel:+914426265074" class="drawer-contact-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              +91 44 2626 5074
+            </a>
+            <span class="drawer-trust-tag">Regd. No. 471/1990 • 80G Certified</span>
+          </div>
+        </div>
       </nav>
 
       <!-- Action Buttons -->
@@ -130,6 +163,7 @@
       </div>
     </div>
   </header>
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
 
   <!-- ==========================================================================
        Hero Section
@@ -1267,6 +1301,22 @@
       </form>
     </div>
   </div>
+
+  <!-- Floating Mobile Quick Action Bar (Mobile & iPad Compact View) -->
+  <aside class="mobile-sticky-bar" id="mobileStickyBar" aria-label="Quick Actions">
+    <button class="mobile-bar-btn donate" onclick="openModal('donateModal')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span>Donate 80G</span>
+    </button>
+    <button class="mobile-bar-btn csr" onclick="openModal('csrModal')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      <span>CSR Hub</span>
+    </button>
+    <a href="tel:+914426265074" class="mobile-bar-btn call" aria-label="Call Udhavum Ullangal Trust">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <span>Call</span>
+    </a>
+  </aside>
 
   <!-- Scripts -->
   <script src="js/main.js"></script>

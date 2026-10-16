@@ -65,12 +65,14 @@ function initServiceSlider() {
   }
 
   // Create dots
-  if (dotsContainer) {
+  function rebuildDots() {
+    if (!dotsContainer) return;
     dotsContainer.innerHTML = '';
     const maxIdx = getMaxIndex();
     for (let i = 0; i <= maxIdx; i++) {
       const dot = document.createElement('div');
-      dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
+      dot.className = `slider-dot ${i === currentIndex ? 'active' : ''}`;
+      dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
       dot.addEventListener('click', () => {
         currentIndex = i;
         updateSlider();
@@ -94,41 +96,122 @@ function initServiceSlider() {
     }
   });
 
+  // Native Touch & Swipe Gestures for Mobile & iPad
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+    handleTouchSwipe();
+  }, { passive: true });
+
+  function handleTouchSwipe() {
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    // Ensure horizontal swipe is more pronounced than vertical scrolling
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      const maxIdx = getMaxIndex();
+      if (diffX > 0 && currentIndex < maxIdx) {
+        // Swiped Left -> Next
+        currentIndex++;
+        updateSlider();
+      } else if (diffX < 0 && currentIndex > 0) {
+        // Swiped Right -> Prev
+        currentIndex--;
+        updateSlider();
+      }
+    }
+  }
+
+  let resizeTimer;
   window.addEventListener('resize', () => {
-    updateSlider();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      rebuildDots();
+      updateSlider();
+    }, 100);
   });
 
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      rebuildDots();
+      updateSlider();
+    }, 200);
+  });
+
+  rebuildDots();
   updateSlider();
 }
 
 
 /* ==========================================================================
-   Mobile Menu
+   Mobile & iPad Off-Canvas Navigation Drawer
    ========================================================================== */
+function closeMobileMenu() {
+  const navMenu = document.getElementById('navMenu');
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const menuBtn = document.getElementById('mobileMenuBtn');
+
+  if (navMenu) navMenu.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('active');
+  if (menuBtn) {
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+  }
+  document.body.style.overflow = '';
+}
+window.closeMobileMenu = closeMobileMenu;
+
 function initMobileMenu() {
   const menuBtn = document.getElementById('mobileMenuBtn');
   const navMenu = document.getElementById('navMenu');
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const closeBtn = document.getElementById('mobileDrawerCloseBtn');
 
-  if (menuBtn && navMenu) {
-    menuBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
-      const isOpen = navMenu.classList.contains('open');
-      menuBtn.setAttribute('aria-expanded', isOpen);
-      menuBtn.innerHTML = isOpen 
-        ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'
-        : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
-    });
+  if (!menuBtn || !navMenu) return;
 
-    // Close when clicking a link
-    navMenu.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('open');
-        if (menuBtn) {
-          menuBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
-        }
-      });
-    });
+  function toggleMenu() {
+    const willOpen = !navMenu.classList.contains('open');
+    if (willOpen) {
+      navMenu.classList.add('open');
+      if (backdrop) backdrop.classList.add('active');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      menuBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      document.body.style.overflow = 'hidden';
+    } else {
+      closeMobileMenu();
+    }
   }
+
+  menuBtn.addEventListener('click', toggleMenu);
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMobileMenu);
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', closeMobileMenu);
+  }
+
+  // Close when pressing Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu.classList.contains('open')) {
+      closeMobileMenu();
+    }
+  });
+
+  // Close when clicking any nav link
+  navMenu.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+  });
 }
 
 /* ==========================================================================
